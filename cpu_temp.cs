@@ -16,26 +16,10 @@ namespace Cpu_Temp
 
     class Program
     {
-        const string CpuTempFilePath = @"/sys/devices/virtual/thermal/thermal_zone3/temp";
         const string ThermalZonePath = @"/sys/devices/virtual/thermal";
 
         double Average_temp;
         Dictionary<int, string> ThermalZoneDictionary;
-
-        public void run()
-        {
-            try
-            {
-                string text = System.IO.File.ReadAllText(CpuTempFilePath);
-                text = text.Trim();
-                double temp = double.Parse(text)/1000;
-                Console.WriteLine(temp+" degrees");
-            }
-            catch
-            {
-                Console.WriteLine("Couldn't read cpu temperature.");
-            }
-        }
 
         void Add_ThermalZone()
         {
@@ -81,7 +65,7 @@ namespace Cpu_Temp
 
                 foreach(var a in sorted)
                 {
-                    double temp = get_zone_thermal(a.Value);
+                    double temp = get_thermal_zone(a.Value);
                     Average_temp += temp;
                     Console.WriteLine($"Zone{a.Key}: {temp}'C");
                     i++;
@@ -92,23 +76,7 @@ namespace Cpu_Temp
             }
         }
 
-        string get_thermal_temp(string path)
-        {
-            try
-            {
-                string text = System.IO.File.ReadAllText(path);
-                text = text.Trim();
-                double temp = double.Parse(text)/1000;
-
-                return temp+" degrees";
-            }
-            catch
-            {
-                return "Couldn't read temperature.";
-            }
-        }
-
-        double get_zone_thermal(string path)
+        double get_thermal_zone(string path)
         {
             try
             {
